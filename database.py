@@ -15,11 +15,11 @@ def new_db():
     connection.close()
     print("Création de la base de données fini.")
 
-def input_data():
+def execute():
     connection = sqlite3.connect("sql.db")
     cursor = connection.cursor()
     while True:
-        data_input = input_data("> ")
+        data_input = input("> ")
         if data_input.lower() == "exit":
             break
         try:
@@ -34,3 +34,4 @@ def input_data():
             print(f"Erreur: {e}")
     connection.close()
     print("Déconnexion de la base de données")
+
