@@ -5,7 +5,6 @@ this_file = os.path.dirname(os.path.abspath(__file__))
 db_file = os.path.join(this_file, "sql.db")
 
 def new_db():
-    """Créer la base de données et la table si elles n'existent pas."""
     if os.path.exists(db_file):
         try:
             connection = sqlite3.connect(db_file)
@@ -30,7 +29,6 @@ def new_db():
     print("Création de la base de données terminée.")
 
 def insert_data():
-    """Insérer des données par défaut dans la base."""
     conn = sqlite3.connect(db_file)
     cursor = conn.cursor()
     cursor.executemany("""
@@ -48,7 +46,6 @@ def insert_data():
     print("Données par défaut insérées avec succès.")
 
 def sql_input():
-    """Permet d'exécuter des requêtes SQL saisies par l'utilisateur."""
     conn = sqlite3.connect(db_file)
     cursor = conn.cursor()
     print("Tapez vos requêtes SQL (tapez 'back' pour revenir au menu principal).")
@@ -71,7 +68,6 @@ def sql_input():
     conn.close()
 
 def main_menu():
-    """Afficher le menu principal et gérer les choix."""
     while True:
         print("\nOptions disponibles :")
         print("1. Création de la base de données")
