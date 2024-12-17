@@ -71,14 +71,11 @@ class SQL(tk.Tk):
         try:
             connexion = sqlite3.connect(db_file)
             cursor = connexion.cursor()
-
             cursor.execute("SELECT MIN(price), MAX(price) FROM voitures")
             min_price, max_price = cursor.fetchone()
             connexion.close()
-
             if min_price is None or max_price is None:
                 min_price, max_price = 0, 1000000
-
         except sqlite3.Error as e:
             messagebox.showerror("Erreur", f"Erreur avec la base de données : {e}")
             min_price, max_price = 0, 1000000
@@ -92,6 +89,40 @@ class SQL(tk.Tk):
         self.back_button = tk.Button(master=self, text="Retour", command=self.default_widgets).place(x=10, y=220)
 
         self.populate_comboboxes()
+
+        self.marque_combo.bind("<<ComboboxSelected>>", lambda e: self.update_combobox(self.modele_combo, "modele", self.marque_combo, "marque"))
+        self.marque_combo.bind("<<ComboboxSelected>>", lambda e: self.update_combobox(self.annee_combo, "annee", self.marque_combo, "marque"))
+        self.modele_combo.bind("<<ComboboxSelected>>", lambda e: self.update_combobox(self.annee_combo, "annee", self.modele_combo, "modele"))
+        self.marque_combo.bind("<<ComboboxSelected>>", lambda e: self.update_comboboxes_on_marque())
+    def update_comboboxes_on_marque(self):
+        selected_marque = self.marque_combo.get()
+        self.update_combobox(self.modele_combo, "modele", self.marque_combo, "marque")
+        self.update_combobox(self.annee_combo, "annee", self.marque_combo, "marque")
+
+    def update_combobox(self, target_combobox, column, filter_combobox=None, filter_column=None):
+        try:
+            connexion = sqlite3.connect(db_file)
+            cursor = connexion.cursor()
+
+            query = f"SELECT DISTINCT {column} FROM voitures"
+            params = []
+
+            if filter_combobox and filter_column:
+                selected_value = filter_combobox.get()
+                if selected_value and selected_value != "TOUS":
+                    query += f" WHERE {filter_column} = ?"
+                    params.append(selected_value)
+
+            cursor.execute(query, params)
+            values = [row[0] for row in cursor.fetchall()]
+            connexion.close()
+
+            target_combobox['values'] = ["TOUS"] + sorted(values)
+            target_combobox.current(0)
+
+        except sqlite3.Error as e:
+            messagebox.showerror("Erreur", f"Erreur avec la base de données : {e}")
+
 
     def populate_comboboxes(self):
         try:
