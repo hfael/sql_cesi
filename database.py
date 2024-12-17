@@ -44,7 +44,7 @@ class SQL(tk.Tk):
         self.annee_entry = tk.Entry(master=self)
         self.annee_entry.place(x=60, y=135)
 
-        self.price_label = tk.Label(master=self, text="Prix").place(x=110, y=160)
+        self.price_label = tk.Label(master=self, text="Prix (€)").place(x=110, y=160)
         self.price_entry = tk.Entry(master=self)
         self.price_entry.place(x=65, y=185)
 
@@ -149,7 +149,7 @@ class SQL(tk.Tk):
             connexion.close()
 
             if results:
-                result_text = "\n".join([f"Marque: {row[0]}, Modèle: {row[1]}, Année: {row[2]}, Prix: {row[3]}" for row in results])
+                result_text = "\n".join([f"Marque: {row[0]}, Modèle: {row[1]}, Année: {row[2]}, Prix: {row[3]}€" for row in results])
                 messagebox.showinfo("Résultats", result_text)
             else:
                 messagebox.showinfo("Résultats", "Aucune voiture trouvée.")
